@@ -49,8 +49,47 @@ async function getUserById(req, res, next) {
   }
 }
 
+async function updateUserByAdmin(req, res, next) {
+  try {
+    const updatedUser = await usersService.updateUserByAdmin(req.params.id, req.body);
+    return res.status(200).json({
+      status: 'success',
+      data: updatedUser,
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function deleteUserByAdmin(req, res, next) {
+  try {
+    const result = await usersService.deleteUserByAdmin(req.params.id);
+    return res.status(200).json({
+      status: 'success',
+      message: result.message,
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function updateUserStatusByAdmin(req, res, next) {
+  try {
+    const updatedUser = await usersService.updateUserStatusByAdmin(req.params.id, req.body.status);
+    return res.status(200).json({
+      status: 'success',
+      data: updatedUser,
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   createUser,
   getUsers,
   getUserById,
+  updateUserByAdmin,
+  deleteUserByAdmin,
+  updateUserStatusByAdmin,
 };

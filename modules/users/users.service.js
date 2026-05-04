@@ -45,8 +45,66 @@ async function getUserById(id) {
   return user;
 }
 
+async function updateUserByAdmin(id, payload) {
+  const existingUser = await usersRepository.findById(id);
+  if (!existingUser) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  const allowedFields = ['firstName', 'lastName', 'phone', 'role', 'password'];
+  const updateData = {};
+
+  for (const field of allowedFields) {
+    if (payload[field] !== undefined) {
+      updateData[field] = payload[field];
+    }
+  }
+
+  if (updateData.password) {
+    updateData.password = await hashPassword(updateData.password);
+  }
+
+  const updatedUser = await usersRepository.updateById(id, updateData);
+  return updatedUser;
+}
+
+async function deleteUserByAdmin(id) {
+  const existingUser = await usersRepository.findById(id);
+  if (!existingUser) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  if (existingUser.role === 'admin') {
+    throw new ApiError(403, 'Cannot delete admin');
+  }
+
+  await usersRepository.deleteById(id);
+
+  return {
+    message: 'User deleted successfully',
+  };
+}
+
+async function updateUserStatusByAdmin(id, status) {
+  const allowedStatuses = ['active', 'inactive'];
+  if (!allowedStatuses.includes(status)) {
+    throw new ApiError(400, 'Invalid status');
+  }
+
+  const existingUser = await usersRepository.findById(id);
+  if (!existingUser) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  const updatedUser = await usersRepository.updateStatusById(id, status);
+  return updatedUser;
+}
+
 module.exports = {
   createUser,
   getUsers,
   getUserById,
+  updateUserByAdmin,
+  deleteUserByAdmin,
+  updateUserStatusByAdmin,
 };

@@ -45,6 +45,7 @@ const usersSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey: false, // remove __v field
   }
 );
 

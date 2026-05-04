@@ -17,7 +17,22 @@ const getUserByIdParamsSchema = z.object({
   }),
 });
 
+const updateUserByAdminSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  phone: z.string().optional(),
+  role: z.enum(['admin', 'employee']).optional(),
+  password: z.string().min(6, 'password must be at least 6 characters').optional(),
+  email: z.string().email().optional(),
+});
+
+const updateUserStatusSchema = z.object({
+  status: z.enum(['active', 'inactive']),
+});
+
 module.exports = {
   createUserSchema,
   getUserByIdParamsSchema,
+  updateUserByAdminSchema,
+  updateUserStatusSchema,
 };
