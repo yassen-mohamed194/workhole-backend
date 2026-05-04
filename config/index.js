@@ -1,24 +1,27 @@
 const dotenv = require('dotenv');
+const { z } = require('zod');
 
 dotenv.config();
 
-const requiredEnvVars = ['PORT', 'MONGO_URI', 'JWT_SECRET', 'JWT_EXPIRES_IN'];
+const envSchema = z.object({
+  PORT: z.coerce.number().int().positive(),
+  MONGO_URI: z.string().min(1, 'MONGO_URI is required'),
+  JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
+  JWT_EXPIRES_IN: z.string().min(1, 'JWT_EXPIRES_IN is required'),
+});
 
-for (const key of requiredEnvVars) {
-  if (!process.env[key]) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  const firstError = parsedEnv.error.issues[0];
+  throw new Error(firstError?.message || 'Invalid environment configuration');
 }
 
-const port = Number(process.env.PORT);
-
-if (Number.isNaN(port)) {
-  throw new Error('PORT must be a valid number');
-}
+const env = parsedEnv.data;
 
 module.exports = {
-  port,
-  mongoUri: process.env.MONGO_URI,
-  jwtSecret: process.env.JWT_SECRET,
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN,
+  port: env.PORT,
+  mongoUri: env.MONGO_URI,
+  jwtSecret: env.JWT_SECRET,
+  jwtExpiresIn: env.JWT_EXPIRES_IN,
 };
