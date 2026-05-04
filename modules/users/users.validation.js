@@ -22,8 +22,6 @@ const updateUserByAdminSchema = z.object({
   lastName: z.string().optional(),
   phone: z.string().optional(),
   role: z.enum(['admin', 'employee']).optional(),
-  password: z.string().min(6, 'password must be at least 6 characters').optional(),
-  email: z.string().email().optional(),
 });
 
 const updateUserStatusSchema = z.object({

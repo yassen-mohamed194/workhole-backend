@@ -51,17 +51,13 @@ async function updateUserByAdmin(id, payload) {
     throw new ApiError(404, 'User not found');
   }
 
-  const allowedFields = ['firstName', 'lastName', 'phone', 'role', 'password'];
+  const allowedFields = ['firstName', 'lastName', 'phone', 'role', 'status', 'shiftId'];
   const updateData = {};
 
   for (const field of allowedFields) {
     if (payload[field] !== undefined) {
       updateData[field] = payload[field];
     }
-  }
-
-  if (updateData.password) {
-    updateData.password = await hashPassword(updateData.password);
   }
 
   const updatedUser = await usersRepository.updateById(id, updateData);
