@@ -21,7 +21,7 @@ function findById(id) {
 }
 
 function updateById(id, data) {
-  return User.findByIdAndUpdate(id, data, { new: true, runValidators: true }).select('-password');
+  return User.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true }).select('-password');
 }
 
 function deleteById(id) {
@@ -29,7 +29,7 @@ function deleteById(id) {
 }
 
 function updateStatusById(id, status) {
-  return User.findByIdAndUpdate(id, { status }, { new: true, runValidators: true }).select('-password');
+  return User.findByIdAndUpdate(id, { status }, { returnDocument: 'after', runValidators: true }).select('-password');
 }
 
 module.exports = {
