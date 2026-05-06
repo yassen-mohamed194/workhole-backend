@@ -10,7 +10,17 @@ const changePasswordSchema = z.object({
   newPassword: z.string().min(6, 'newPassword must be at least 6 characters'),
 });
 
+const refreshTokenSchema = z.object({
+  refreshToken: z.string().min(1, 'refreshToken is required'),
+});
+
+const logoutSchema = z.object({
+  refreshToken: z.string().min(1, 'refreshToken is required'),
+});
+
 module.exports = {
   loginSchema,
   changePasswordSchema,
+  refreshTokenSchema,
+  logoutSchema,
 };

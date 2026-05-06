@@ -32,12 +32,20 @@ function findByIdWithPassword(id) {
   return User.findById(id).select('+password');
 }
 
+function findByIdWithRefreshToken(id) {
+  return User.findById(id);
+}
+
 function updateById(id, data) {
   return User.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true }).select('-password');
 }
 
 function updatePasswordById(id, password) {
   return User.findByIdAndUpdate(id, { password }, { returnDocument: 'after', runValidators: true });
+}
+
+function updateRefreshTokenById(id, refreshToken) {
+  return User.findByIdAndUpdate(id, { refreshToken }, { returnDocument: 'after', runValidators: true });
 }
 
 function deleteById(id) {
@@ -56,8 +64,10 @@ module.exports = {
   findAll,
   findById,
   findByIdWithPassword,
+  findByIdWithRefreshToken,
   updateById,
   updatePasswordById,
+  updateRefreshTokenById,
   deleteById,
   updateStatusById,
 };

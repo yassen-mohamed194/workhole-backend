@@ -27,7 +27,35 @@ async function changePassword(req, res, next) {
   }
 }
 
+async function refreshToken(req, res, next) {
+  try {
+    const { refreshToken: token } = req.body;
+    const data = await authService.refreshToken(token);
+    return res.status(200).json({
+      status: 'success',
+      data,
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function logout(req, res, next) {
+  try {
+    const { refreshToken: token } = req.body;
+    await authService.logout(token);
+    return res.status(200).json({
+      status: 'success',
+      message: 'Logged out successfully',
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   login,
   changePassword,
+  refreshToken,
+  logout,
 };

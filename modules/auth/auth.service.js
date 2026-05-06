@@ -1,11 +1,15 @@
 const ApiError = require('../../shared/utils/ApiError');
+const jwt = require('jsonwebtoken');
+const config = require('../../config');
 const comparePassword = require('./utils/comparePassword');
-const generateToken = require('./utils/generateToken');
+const generateAccessToken = require('./utils/generateAccessToken');
+const generateRefreshToken = require('./utils/generateRefreshToken');
 const hashPassword = require('./utils/hashPassword');
+const authRepository = require('./auth.repository');
 const usersRepository = require('../users/users.repository');
 
 async function login(identifier, password) {
-  const user = await usersRepository.findByIdentifier(identifier);
+  const user = await authRepository.findUserByIdentifier(identifier);
   if (!user) {
     throw new ApiError(401, 'Invalid credentials');
   }
@@ -15,12 +19,77 @@ async function login(identifier, password) {
     throw new ApiError(401, 'Invalid credentials');
   }
 
-  const token = generateToken({
+  const tokenPayload = {
+    id: user._id,
+    role: user.role,
+  };
+  const accessToken = generateAccessToken(tokenPayload);
+  const refreshToken = generateRefreshToken(tokenPayload);
+  const hashedRefreshToken = await hashPassword(refreshToken);
+
+  await authRepository.updateRefreshTokenById(user._id, hashedRefreshToken);
+
+  const userResponse = user.toObject();
+  delete userResponse.password;
+  delete userResponse.refreshToken;
+
+  return {
+    accessToken,
+    refreshToken,
+    user: userResponse,
+  };
+}
+
+async function refreshToken(token) {
+  let decoded;
+  try {
+    decoded = jwt.verify(token, config.jwtRefreshSecret);
+  } catch {
+    throw new ApiError(401, 'Invalid refresh token');
+  }
+
+  const user = await authRepository.findUserByIdWithRefreshToken(decoded.id);
+  if (!user || !user.refreshToken) {
+    throw new ApiError(401, 'Invalid refresh token');
+  }
+
+  if (user.status !== 'active') {
+    throw new ApiError(403, 'User is inactive');
+  }
+
+  const isTokenValid = await comparePassword(token, user.refreshToken);
+  if (!isTokenValid) {
+    throw new ApiError(401, 'Invalid refresh token');
+  }
+
+  const accessToken = generateAccessToken({
     id: user._id,
     role: user.role,
   });
 
-  return { token };
+  return { accessToken };
+}
+
+async function logout(token) {
+  let decoded;
+  try {
+    decoded = jwt.verify(token, config.jwtRefreshSecret);
+  } catch {
+    throw new ApiError(401, 'Invalid refresh token');
+  }
+
+  const user = await authRepository.findUserByIdWithRefreshToken(decoded.id);
+  if (!user || !user.refreshToken) {
+    throw new ApiError(401, 'Invalid refresh token');
+  }
+
+  const isTokenValid = await comparePassword(token, user.refreshToken);
+  if (!isTokenValid) {
+    throw new ApiError(401, 'Invalid refresh token');
+  }
+
+  await authRepository.clearRefreshTokenById(user._id);
+  return true;
 }
 
 async function changePassword(userId, oldPassword, newPassword) {
@@ -42,5 +111,7 @@ async function changePassword(userId, oldPassword, newPassword) {
 
 module.exports = {
   login,
+  refreshToken,
+  logout,
   changePassword,
 };
