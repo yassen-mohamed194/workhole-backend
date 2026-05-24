@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 const app = require('./app');
 const config = require('./config');
+const seedRoles = require('./shared/seeds/seedRoles');
 
 async function startServer() {
   try {
     await mongoose.connect(config.mongoUri, {
       serverSelectionTimeoutMS: 10000,
     });
+
+    await seedRoles();
 
     app.listen(config.port, () => {
       console.log(`Server running on port ${config.port}`);

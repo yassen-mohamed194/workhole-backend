@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const authMiddleware = require('../../shared/middleware/authMiddleware');
-const { authorize } = require('../../shared/middleware/roleMiddleware');
+const authorizePermissions = require('../../shared/middleware/authorizePermissions');
+const { PERMISSIONS } = require('../../shared/constants/permissions');
 const validate = require('../../shared/middleware/validate');
 const usersController = require('./users.controller');
 const {
@@ -50,7 +51,13 @@ const router = Router();
  *           schema:
  *             $ref: '#/components/schemas/CreateUserRequest'
  */
-router.post('/', authMiddleware, authorize('admin'), validate(createUserSchema), usersController.createUser);
+router.post(
+  '/',
+  authMiddleware,
+  authorizePermissions(PERMISSIONS.USERS_CREATE),
+  validate(createUserSchema),
+  usersController.createUser
+);
 /**
  * @swagger
  * /api/users:
@@ -70,7 +77,7 @@ router.post('/', authMiddleware, authorize('admin'), validate(createUserSchema),
  *       403:
  *         $ref: '#/components/responses/Forbidden'
  */
-router.get('/', authMiddleware, authorize('admin'), usersController.getUsers);
+router.get('/', authMiddleware, authorizePermissions(PERMISSIONS.USERS_READ), usersController.getUsers);
 /**
  * @swagger
  * /api/users/{id}:
@@ -155,7 +162,7 @@ router.get(
 router.patch(
   '/:id',
   authMiddleware,
-  authorize('admin'),
+  authorizePermissions(PERMISSIONS.USERS_UPDATE),
   validate(getUserByIdParamsSchema, 'params'),
   validate(updateUserByAdminSchema),
   usersController.updateUserByAdmin
@@ -207,7 +214,7 @@ router.patch(
 router.delete(
   '/:id',
   authMiddleware,
-  authorize('admin'),
+  authorizePermissions(PERMISSIONS.USERS_DELETE),
   validate(getUserByIdParamsSchema, 'params'),
   usersController.deleteUserByAdmin
 );
@@ -250,7 +257,7 @@ router.delete(
 router.patch(
   '/:id/status',
   authMiddleware,
-  authorize('admin'),
+  authorizePermissions(PERMISSIONS.USERS_UPDATE),
   validate(getUserByIdParamsSchema, 'params'),
   validate(updateUserStatusSchema),
   usersController.updateUserStatusByAdmin

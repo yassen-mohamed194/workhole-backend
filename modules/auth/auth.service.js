@@ -1,6 +1,8 @@
 const ApiError = require('../../shared/utils/ApiError');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
+const buildTokenPayload = require('../../shared/utils/buildTokenPayload');
+const { mapUserResponse } = require('../../shared/utils/mapUserResponse');
 const comparePassword = require('./utils/comparePassword');
 const generateAccessToken = require('./utils/generateAccessToken');
 const generateRefreshToken = require('./utils/generateRefreshToken');
@@ -19,17 +21,14 @@ async function login(identifier, password) {
     throw new ApiError(401, 'Invalid credentials');
   }
 
-  const tokenPayload = {
-    id: user._id,
-    role: user.role,
-  };
+  const tokenPayload = buildTokenPayload(user);
   const accessToken = generateAccessToken(tokenPayload);
   const refreshToken = generateRefreshToken(tokenPayload);
   const hashedRefreshToken = await hashPassword(refreshToken);
 
   await authRepository.updateRefreshTokenById(user._id, hashedRefreshToken);
 
-  const userResponse = user.toObject();
+  const userResponse = mapUserResponse(user);
   delete userResponse.password;
   delete userResponse.refreshToken;
 
@@ -62,10 +61,7 @@ async function refreshToken(token) {
     throw new ApiError(401, 'Invalid refresh token');
   }
 
-  const accessToken = generateAccessToken({
-    id: user._id,
-    role: user.role,
-  });
+  const accessToken = generateAccessToken(buildTokenPayload(user));
 
   return { accessToken };
 }

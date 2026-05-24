@@ -1,5 +1,18 @@
 const ApiError = require('../../shared/utils/ApiError');
+const { PERMISSIONS, WILDCARD_PERMISSION } = require('../../shared/constants/permissions');
 const usersService = require('./users.service');
+
+function hasPermission(user, permission) {
+  const permissions = user.permissions || [];
+  return permissions.includes(WILDCARD_PERMISSION) || permissions.includes(permission);
+}
+
+function normalizeUserId(rawId) {
+  if (rawId && typeof rawId === 'object' && '$oid' in rawId) {
+    return String(rawId.$oid);
+  }
+  return String(rawId ?? '');
+}
 
 async function createUser(req, res, next) {
   try {
@@ -27,15 +40,12 @@ async function getUsers(req, res, next) {
 
 async function getUserById(req, res, next) {
   try {
-    const rawTokenId = req.user.id;
-    const userIdAsString =
-      rawTokenId && typeof rawTokenId === 'object' && '$oid' in rawTokenId
-        ? String(rawTokenId.$oid)
-        : String(rawTokenId ?? '');
+    const userIdAsString = normalizeUserId(req.user.id);
     const paramIdAsString = String(req.params.id);
-    const isAdmin = req.user.role === 'admin';
+    const canReadUsers = hasPermission(req.user, PERMISSIONS.USERS_READ);
     const isSelf = userIdAsString === paramIdAsString;
-    if (!isAdmin && !isSelf) {
+
+    if (!canReadUsers && !isSelf) {
       return next(new ApiError(403, 'Forbidden'));
     }
 

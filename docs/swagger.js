@@ -10,7 +10,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:3000/api',
+      url: 'http://localhost:8009/',
       description: 'Local development server',
     },
   ],
@@ -63,7 +63,7 @@ const swaggerDefinition = {
           },
           role: {
             type: 'string',
-            enum: ['admin', 'employee'],
+            description: 'Role name resolved from the Roles collection',
             example: 'admin',
           },
           status: {
@@ -202,6 +202,98 @@ const swaggerDefinition = {
           },
         },
       },
+      Role: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345678',
+          },
+          name: {
+            type: 'string',
+            example: 'teamlead',
+          },
+          permissions: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            example: ['users.read', 'attendance.history'],
+          },
+          isSystem: {
+            type: 'boolean',
+            example: false,
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+        },
+      },
+      SuccessResponseWithRole: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/Role',
+          },
+        },
+      },
+      SuccessResponseWithRoles: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/Role',
+            },
+          },
+        },
+      },
+      CreateRoleRequest: {
+        type: 'object',
+        required: ['name', 'permissions'],
+        properties: {
+          name: {
+            type: 'string',
+            example: 'teamlead',
+          },
+          permissions: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            example: ['users.read', 'attendance.history'],
+          },
+        },
+      },
+      UpdateRoleRequest: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            example: 'supervisor',
+          },
+          permissions: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            example: ['users.read'],
+          },
+        },
+      },
       CreateUserRequest: {
         type: 'object',
         required: ['firstName', 'lastName', 'email', 'password'],
@@ -230,7 +322,7 @@ const swaggerDefinition = {
           },
           role: {
             type: 'string',
-            enum: ['admin', 'employee'],
+            description: 'Role name resolved from the Roles collection',
             example: 'employee',
           },
           shiftId: {
@@ -257,7 +349,7 @@ const swaggerDefinition = {
           },
           role: {
             type: 'string',
-            enum: ['admin', 'employee'],
+            description: 'Role name resolved from the Roles collection',
             example: 'employee',
           },
         },
@@ -377,12 +469,16 @@ const swaggerDefinition = {
       name: 'Users',
       description: 'User lifecycle and administration',
     },
+    {
+      name: 'Roles',
+      description: 'Roles lifecycle and permission management',
+    },
   ],
 };
 
 const swaggerOptions = {
   definition: swaggerDefinition,
-  apis: ['./modules/auth/*.js', './modules/users/*.js'],
+  apis: ['./modules/auth/*.js', './modules/users/*.js', './modules/roles/*.js'],
 };
 
 module.exports = swaggerJsdoc(swaggerOptions);

@@ -22,7 +22,13 @@ function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
-    req.user = decoded;
+
+    req.user = {
+      id: decoded.id,
+      roleId: decoded.roleId,
+      permissions: Array.isArray(decoded.permissions) ? decoded.permissions : [],
+    };
+
     return next();
   } catch {
     return next(new ApiError(401, 'Invalid or expired token'));
