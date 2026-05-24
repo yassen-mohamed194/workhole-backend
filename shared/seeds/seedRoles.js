@@ -29,7 +29,11 @@ const SYSTEM_ROLES = [
 
 async function ensureSystemRoles() {
   for (const roleData of SYSTEM_ROLES) {
-    await Role.findOneAndUpdate({ name: roleData.name }, { $set: roleData }, { upsert: true, new: true });
+    await Role.findOneAndUpdate(
+      { name: roleData.name },
+      { $set: roleData },
+      { upsert: true, returnDocument: 'after' }
+    );
   }
 }
 
