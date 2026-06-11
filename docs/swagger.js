@@ -352,9 +352,204 @@ const swaggerDefinition = {
             description: 'Role name resolved from the Roles collection',
             example: 'employee',
           },
+          shiftId: {
+            type: 'string',
+            nullable: true,
+            description: 'Shift MongoDB ObjectId. Pass null to unassign.',
+            example: '6820ab17c9ab39d812345679',
+          },
         },
       },
       UpdateUserStatusRequest: {
+        type: 'object',
+        required: ['status'],
+        properties: {
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive'],
+            example: 'inactive',
+          },
+        },
+      },
+      Shift: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345679',
+          },
+          name: {
+            type: 'string',
+            example: 'Morning Shift',
+          },
+          startTime: {
+            type: 'string',
+            pattern: '^([01]\\d|2[0-3]):[0-5]\\d$',
+            example: '09:00',
+          },
+          endTime: {
+            type: 'string',
+            pattern: '^([01]\\d|2[0-3]):[0-5]\\d$',
+            example: '17:00',
+          },
+          workingDays: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+            },
+            example: ['mon', 'tue', 'wed', 'thu', 'fri'],
+          },
+          breakDuration: {
+            type: 'integer',
+            minimum: 0,
+            example: 60,
+          },
+          gracePeriod: {
+            type: 'integer',
+            minimum: 0,
+            example: 15,
+          },
+          isNightShift: {
+            type: 'boolean',
+            example: false,
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive'],
+            example: 'active',
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+        },
+      },
+      SuccessResponseWithShift: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/Shift',
+          },
+        },
+      },
+      SuccessResponseWithShifts: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/Shift',
+            },
+          },
+        },
+      },
+      CreateShiftRequest: {
+        type: 'object',
+        required: ['name', 'startTime', 'endTime', 'workingDays'],
+        properties: {
+          name: {
+            type: 'string',
+            example: 'Morning Shift',
+          },
+          startTime: {
+            type: 'string',
+            pattern: '^([01]\\d|2[0-3]):[0-5]\\d$',
+            example: '09:00',
+          },
+          endTime: {
+            type: 'string',
+            pattern: '^([01]\\d|2[0-3]):[0-5]\\d$',
+            example: '17:00',
+          },
+          workingDays: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+            },
+            example: ['mon', 'tue', 'wed', 'thu', 'fri'],
+          },
+          breakDuration: {
+            type: 'integer',
+            minimum: 0,
+            example: 60,
+          },
+          gracePeriod: {
+            type: 'integer',
+            minimum: 0,
+            example: 15,
+          },
+          isNightShift: {
+            type: 'boolean',
+            example: false,
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive'],
+            example: 'active',
+          },
+        },
+      },
+      UpdateShiftRequest: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            example: 'Evening Shift',
+          },
+          startTime: {
+            type: 'string',
+            pattern: '^([01]\\d|2[0-3]):[0-5]\\d$',
+            example: '14:00',
+          },
+          endTime: {
+            type: 'string',
+            pattern: '^([01]\\d|2[0-3]):[0-5]\\d$',
+            example: '22:00',
+          },
+          workingDays: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+            },
+            example: ['mon', 'tue', 'wed', 'thu', 'fri'],
+          },
+          breakDuration: {
+            type: 'integer',
+            minimum: 0,
+            example: 45,
+          },
+          gracePeriod: {
+            type: 'integer',
+            minimum: 0,
+            example: 10,
+          },
+          isNightShift: {
+            type: 'boolean',
+            example: false,
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive'],
+            example: 'active',
+          },
+        },
+      },
+      UpdateShiftStatusRequest: {
         type: 'object',
         required: ['status'],
         properties: {
@@ -473,12 +668,16 @@ const swaggerDefinition = {
       name: 'Roles',
       description: 'Roles lifecycle and permission management',
     },
+    {
+      name: 'Shifts',
+      description: 'Shift schedule management',
+    },
   ],
 };
 
 const swaggerOptions = {
   definition: swaggerDefinition,
-  apis: ['./modules/auth/*.js', './modules/users/*.js', './modules/roles/*.js'],
+  apis: ['./modules/auth/*.js', './modules/users/*.js', './modules/roles/*.js', './modules/shifts/*.js'],
 };
 
 module.exports = swaggerJsdoc(swaggerOptions);

@@ -68,6 +68,10 @@ function countByRoleId(roleId) {
   return User.countDocuments({ roleId });
 }
 
+function countByShiftId(shiftId) {
+  return User.countDocuments({ shiftId });
+}
+
 module.exports = {
   createUser,
   findByEmail,
@@ -83,4 +87,5 @@ module.exports = {
   deleteById,
   updateStatusById,
   countByRoleId,
+  countByShiftId,
 };

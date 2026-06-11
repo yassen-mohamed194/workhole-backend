@@ -22,6 +22,14 @@ const updateUserByAdminSchema = z.object({
   lastName: z.string().optional(),
   phone: z.string().optional(),
   role: z.string().optional(),
+  shiftId: z
+    .union([
+      z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
+        message: 'Invalid shiftId',
+      }),
+      z.null(),
+    ])
+    .optional(),
 });
 
 const updateUserStatusSchema = z.object({

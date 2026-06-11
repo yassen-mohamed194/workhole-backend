@@ -6,6 +6,11 @@ const PERMISSIONS = {
 
   ROLES_MANAGE: 'roles.manage',
 
+  SHIFTS_CREATE: 'shifts.create',
+  SHIFTS_READ: 'shifts.read',
+  SHIFTS_UPDATE: 'shifts.update',
+  SHIFTS_DELETE: 'shifts.delete',
+
   ATTENDANCE_CHECKIN: 'attendance.checkin',
   ATTENDANCE_CHECKOUT: 'attendance.checkout',
   ATTENDANCE_HISTORY: 'attendance.history',

@@ -46,6 +46,7 @@ const usersSchema = new mongoose.Schema(
     shiftId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Shift',
+      default: null,
     },
   },
   {

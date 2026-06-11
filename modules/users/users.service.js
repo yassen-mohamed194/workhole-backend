@@ -3,6 +3,7 @@ const { SYSTEM_ADMIN_ROLE, SYSTEM_EMPLOYEE_ROLE } = require('../../shared/consta
 const { mapUserResponse, mapUsersResponse } = require('../../shared/utils/mapUserResponse');
 const hashPassword = require('../auth/utils/hashPassword');
 const rolesRepository = require('../roles/roles.repository');
+const shiftsRepository = require('../shifts/shifts.repository');
 const usersRepository = require('./users.repository');
 
 async function resolveRoleId(roleName) {
@@ -69,7 +70,7 @@ async function updateUserByAdmin(id, payload) {
     throw new ApiError(404, 'User not found');
   }
 
-  const allowedFields = ['firstName', 'lastName', 'phone', 'status', 'shiftId'];
+  const allowedFields = ['firstName', 'lastName', 'phone', 'status'];
   const updateData = {};
 
   for (const field of allowedFields) {
@@ -80,6 +81,18 @@ async function updateUserByAdmin(id, payload) {
 
   if (payload.role !== undefined) {
     updateData.roleId = await resolveRoleId(payload.role);
+  }
+
+  if (payload.shiftId !== undefined) {
+    if (payload.shiftId === null) {
+      updateData.shiftId = null;
+    } else {
+      const shift = await shiftsRepository.findShiftById(payload.shiftId);
+      if (!shift) {
+        throw new ApiError(404, 'Shift not found');
+      }
+      updateData.shiftId = payload.shiftId;
+    }
   }
 
   const updatedUser = await usersRepository.updateById(id, updateData);
