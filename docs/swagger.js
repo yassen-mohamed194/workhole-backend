@@ -891,6 +891,95 @@ const swaggerDefinition = {
           },
         },
       },
+      BreakType: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345682',
+          },
+          name: {
+            type: 'string',
+            example: 'Lunch',
+          },
+          durationMinutes: {
+            type: 'integer',
+            minimum: 1,
+            example: 60,
+          },
+          isActive: {
+            type: 'boolean',
+            example: true,
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-11T10:00:00.000Z',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-11T10:00:00.000Z',
+          },
+        },
+      },
+      CreateBreakTypeRequest: {
+        type: 'object',
+        required: ['name', 'durationMinutes'],
+        properties: {
+          name: {
+            type: 'string',
+            example: 'Lunch',
+          },
+          durationMinutes: {
+            type: 'integer',
+            minimum: 1,
+            example: 60,
+          },
+        },
+      },
+      UpdateBreakTypeRequest: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            example: 'Lunch Break',
+          },
+          durationMinutes: {
+            type: 'integer',
+            minimum: 1,
+            example: 75,
+          },
+        },
+        description: 'At least one field is required',
+      },
+      SuccessResponseWithBreakType: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/BreakType',
+          },
+        },
+      },
+      SuccessResponseWithBreakTypes: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/BreakType',
+            },
+          },
+        },
+      },
       SuccessResponseWithAttendanceSummary: {
         type: 'object',
         properties: {
@@ -1055,6 +1144,10 @@ const swaggerDefinition = {
       name: 'Attendance',
       description: 'Attendance check-in, check-out, and office location management',
     },
+    {
+      name: 'Break Types',
+      description: 'Break types configuration and management',
+    },
   ],
 };
 
@@ -1066,6 +1159,7 @@ const swaggerOptions = {
     './modules/roles/*.js',
     './modules/shifts/*.js',
     './modules/attendance/*.js',
+    './modules/break-types/*.js',
   ],
 };
 

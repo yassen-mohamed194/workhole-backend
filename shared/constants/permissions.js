@@ -20,6 +20,11 @@ const PERMISSIONS = {
   BREAKS_START: 'breaks.start',
   BREAKS_END: 'breaks.end',
   BREAKS_HISTORY: 'breaks.history',
+
+  BREAK_TYPES_CREATE: 'break-types.create',
+  BREAK_TYPES_READ: 'break-types.read',
+  BREAK_TYPES_UPDATE: 'break-types.update',
+  BREAK_TYPES_DELETE: 'break-types.delete',
 };
 
 const ALL_PERMISSIONS = Object.freeze(Object.values(PERMISSIONS));
