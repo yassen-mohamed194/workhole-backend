@@ -9,6 +9,7 @@ const rolesRoutes = require('./modules/roles/roles.routes');
 const shiftsRoutes = require('./modules/shifts/shifts.routes');
 const attendanceRoutes = require('./modules/attendance/attendance.routes');
 const breakTypesRoutes = require('./modules/break-types/breakTypes.routes');
+const breaksRoutes = require('./modules/breaks/breaks.routes');
 const errorHandler = require('./shared/middleware/errorHandler');
 
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/roles', rolesRoutes);
 app.use('/api/shifts', shiftsRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/break-types', breakTypesRoutes);
+app.use('/api/breaks', breaksRoutes);
 app.use(errorHandler);
 
 module.exports = app;

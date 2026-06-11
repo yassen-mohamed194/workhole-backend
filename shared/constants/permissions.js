@@ -19,7 +19,9 @@ const PERMISSIONS = {
 
   BREAKS_START: 'breaks.start',
   BREAKS_END: 'breaks.end',
+  BREAKS_READ: 'breaks.read',
   BREAKS_HISTORY: 'breaks.history',
+  BREAKS_SUMMARY: 'breaks.summary',
 
   BREAK_TYPES_CREATE: 'break-types.create',
   BREAK_TYPES_READ: 'break-types.read',

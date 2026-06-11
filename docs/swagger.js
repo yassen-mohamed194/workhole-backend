@@ -980,6 +980,274 @@ const swaggerDefinition = {
           },
         },
       },
+      Break: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345683',
+          },
+          userId: {
+            type: 'string',
+            example: '681a3c7ac9ab39d812345678',
+          },
+          attendanceId: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345681',
+          },
+          breakTypeId: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345682',
+          },
+          startTime: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-11T12:00:00.000Z',
+          },
+          endTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-06-11T12:30:00.000Z',
+          },
+          durationMinutes: {
+            type: 'integer',
+            minimum: 0,
+            example: 30,
+          },
+          allowedMinutes: {
+            type: 'integer',
+            minimum: 0,
+            example: 30,
+          },
+          exceed: {
+            type: 'integer',
+            minimum: 0,
+            example: 0,
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'completed'],
+            example: 'completed',
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+        },
+      },
+      BreakLog: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345683',
+          },
+          userId: {
+            type: 'string',
+            example: '681a3c7ac9ab39d812345678',
+          },
+          attendanceId: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345681',
+          },
+          startTime: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-11T12:00:00.000Z',
+          },
+          endTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-06-11T12:30:00.000Z',
+          },
+          durationMinutes: {
+            type: 'integer',
+            minimum: 0,
+            example: 30,
+          },
+          allowedMinutes: {
+            type: 'integer',
+            minimum: 0,
+            example: 30,
+          },
+          exceed: {
+            type: 'integer',
+            minimum: 0,
+            example: 5,
+          },
+          isExceeded: {
+            type: 'boolean',
+            example: true,
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'completed'],
+            example: 'completed',
+          },
+          breakType: {
+            $ref: '#/components/schemas/BreakType',
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+        },
+      },
+      BreakTodayResponse: {
+        type: 'object',
+        properties: {
+          totalBreaks: {
+            type: 'integer',
+            example: 2,
+          },
+          totalMinutes: {
+            type: 'integer',
+            example: 45,
+          },
+          exceededBreaks: {
+            type: 'integer',
+            example: 1,
+          },
+          items: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/BreakLog',
+            },
+          },
+        },
+      },
+      BreakHistoryResponse: {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/BreakLog',
+            },
+          },
+          page: {
+            type: 'integer',
+            example: 1,
+          },
+          limit: {
+            type: 'integer',
+            example: 10,
+          },
+          total: {
+            type: 'integer',
+            example: 42,
+          },
+          totalPages: {
+            type: 'integer',
+            example: 5,
+          },
+        },
+      },
+      BreakSummaryResponse: {
+        type: 'object',
+        properties: {
+          totalBreaks: {
+            type: 'integer',
+            example: 12,
+          },
+          totalMinutes: {
+            type: 'integer',
+            example: 360,
+          },
+          averageMinutes: {
+            type: 'integer',
+            example: 30,
+          },
+          exceededBreaks: {
+            type: 'integer',
+            example: 3,
+          },
+          exceededPercentage: {
+            type: 'number',
+            example: 25,
+          },
+        },
+      },
+      StartBreakRequest: {
+        type: 'object',
+        required: ['breakTypeId'],
+        properties: {
+          breakTypeId: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345682',
+          },
+        },
+      },
+      SuccessResponseWithBreak: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/Break',
+          },
+        },
+      },
+      SuccessResponseWithBreakLog: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/BreakLog',
+          },
+        },
+      },
+      SuccessResponseWithBreakToday: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/BreakTodayResponse',
+          },
+        },
+      },
+      SuccessResponseWithBreakHistory: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/BreakHistoryResponse',
+          },
+        },
+      },
+      SuccessResponseWithBreakSummary: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/BreakSummaryResponse',
+          },
+        },
+      },
       SuccessResponseWithAttendanceSummary: {
         type: 'object',
         properties: {
@@ -1148,6 +1416,10 @@ const swaggerDefinition = {
       name: 'Break Types',
       description: 'Break types configuration and management',
     },
+    {
+      name: 'Breaks',
+      description: 'Employee break start and end actions',
+    },
   ],
 };
 
@@ -1160,6 +1432,7 @@ const swaggerOptions = {
     './modules/shifts/*.js',
     './modules/attendance/*.js',
     './modules/break-types/*.js',
+    './modules/breaks/*.js',
   ],
 };
 
