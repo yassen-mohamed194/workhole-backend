@@ -32,6 +32,10 @@ function findById(id) {
   return User.findById(id).select('-password').populate(POPULATE_ROLE);
 }
 
+function findByIdWithShift(id) {
+  return User.findById(id).select('-password').populate('shiftId').lean();
+}
+
 function findByIdWithPassword(id) {
   return User.findById(id).select('+password').populate(POPULATE_ROLE);
 }
@@ -79,6 +83,7 @@ module.exports = {
   findByIdentifier,
   findAll,
   findById,
+  findByIdWithShift,
   findByIdWithPassword,
   findByIdWithRefreshToken,
   updateById,

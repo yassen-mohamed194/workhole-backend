@@ -560,6 +560,385 @@ const swaggerDefinition = {
           },
         },
       },
+      Office: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345680',
+          },
+          name: {
+            type: 'string',
+            example: 'Head Office',
+          },
+          lat: {
+            type: 'number',
+            example: 30.0444,
+          },
+          lng: {
+            type: 'number',
+            example: 31.2357,
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+        },
+      },
+      Attendance: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345681',
+          },
+          userId: {
+            type: 'string',
+            example: '681a3c7ac9ab39d812345678',
+          },
+          date: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-11T00:00:00.000Z',
+          },
+          checkInTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-06-11T09:00:00.000Z',
+          },
+          checkOutTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-06-11T17:00:00.000Z',
+          },
+          checkInLat: {
+            type: 'number',
+            nullable: true,
+            example: 30.0444,
+          },
+          checkInLng: {
+            type: 'number',
+            nullable: true,
+            example: 31.2357,
+          },
+          checkOutLat: {
+            type: 'number',
+            nullable: true,
+            example: 30.0445,
+          },
+          checkOutLng: {
+            type: 'number',
+            nullable: true,
+            example: 31.2358,
+          },
+          locationType: {
+            type: 'string',
+            enum: ['office', 'remote'],
+            nullable: true,
+            example: 'office',
+          },
+          officeId: {
+            type: 'string',
+            nullable: true,
+            example: '6820ab17c9ab39d812345680',
+          },
+          officeName: {
+            type: 'string',
+            nullable: true,
+            example: 'Head Office',
+          },
+          totalWorkMinutes: {
+            type: 'integer',
+            minimum: 0,
+            example: 480,
+          },
+          status: {
+            type: 'string',
+            enum: ['present', 'late', 'absent'],
+            example: 'present',
+          },
+          earlyCheckout: {
+            type: 'boolean',
+            example: false,
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+          },
+        },
+      },
+      CreateOfficeRequest: {
+        type: 'object',
+        required: ['name', 'lat', 'lng'],
+        properties: {
+          name: {
+            type: 'string',
+            example: 'Head Office',
+          },
+          lat: {
+            type: 'number',
+            minimum: -90,
+            maximum: 90,
+            example: 30.0444,
+          },
+          lng: {
+            type: 'number',
+            minimum: -180,
+            maximum: 180,
+            example: 31.2357,
+          },
+        },
+      },
+      CheckInRequest: {
+        type: 'object',
+        required: ['lat', 'lng'],
+        properties: {
+          lat: {
+            type: 'number',
+            minimum: -90,
+            maximum: 90,
+            example: 30.0444,
+          },
+          lng: {
+            type: 'number',
+            minimum: -180,
+            maximum: 180,
+            example: 31.2357,
+          },
+        },
+      },
+      CheckOutRequest: {
+        type: 'object',
+        required: ['lat', 'lng'],
+        properties: {
+          lat: {
+            type: 'number',
+            minimum: -90,
+            maximum: 90,
+            example: 30.0444,
+          },
+          lng: {
+            type: 'number',
+            minimum: -180,
+            maximum: 180,
+            example: 31.2357,
+          },
+        },
+      },
+      SuccessResponseWithOffice: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/Office',
+          },
+        },
+      },
+      SuccessResponseWithOffices: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/Office',
+            },
+          },
+        },
+      },
+      SuccessResponseWithAttendance: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/Attendance',
+          },
+        },
+      },
+      SuccessResponseWithAttendanceNullable: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            oneOf: [
+              { $ref: '#/components/schemas/Attendance' },
+              { type: 'null' },
+            ],
+            nullable: true,
+          },
+        },
+      },
+      AttendanceSummary: {
+        type: 'object',
+        properties: {
+          totalDays: {
+            type: 'integer',
+            example: 20,
+          },
+          presentDays: {
+            type: 'integer',
+            example: 15,
+          },
+          lateDays: {
+            type: 'integer',
+            example: 3,
+          },
+          absentDays: {
+            type: 'integer',
+            example: 2,
+          },
+          totalWorkMinutes: {
+            type: 'integer',
+            example: 9600,
+          },
+          averageWorkMinutes: {
+            type: 'integer',
+            example: 480,
+          },
+        },
+      },
+      MonthlyAttendanceSummary: {
+        allOf: [
+          { $ref: '#/components/schemas/AttendanceSummary' },
+          {
+            type: 'object',
+            properties: {
+              month: {
+                type: 'integer',
+                example: 6,
+              },
+              year: {
+                type: 'integer',
+                example: 2026,
+              },
+            },
+          },
+        ],
+      },
+      AttendanceHistoryResponse: {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/Attendance',
+            },
+          },
+          page: {
+            type: 'integer',
+            example: 1,
+          },
+          limit: {
+            type: 'integer',
+            example: 10,
+          },
+          total: {
+            type: 'integer',
+            example: 42,
+          },
+          totalPages: {
+            type: 'integer',
+            example: 5,
+          },
+        },
+      },
+      AttendanceLogsResponse: {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/Attendance',
+            },
+          },
+          page: {
+            type: 'integer',
+            example: 1,
+          },
+          limit: {
+            type: 'integer',
+            example: 10,
+          },
+          total: {
+            type: 'integer',
+            example: 120,
+          },
+          totalPages: {
+            type: 'integer',
+            example: 12,
+          },
+        },
+      },
+      SuccessResponseWithAttendanceSummary: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/AttendanceSummary',
+          },
+        },
+      },
+      SuccessResponseWithMonthlyAttendanceSummary: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/MonthlyAttendanceSummary',
+          },
+        },
+      },
+      SuccessResponseWithAttendanceHistory: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/AttendanceHistoryResponse',
+          },
+        },
+      },
+      SuccessResponseWithAttendanceLogs: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/AttendanceLogsResponse',
+          },
+        },
+      },
     },
     responses: {
       BadRequest: {
@@ -672,12 +1051,22 @@ const swaggerDefinition = {
       name: 'Shifts',
       description: 'Shift schedule management',
     },
+    {
+      name: 'Attendance',
+      description: 'Attendance check-in, check-out, and office location management',
+    },
   ],
 };
 
 const swaggerOptions = {
   definition: swaggerDefinition,
-  apis: ['./modules/auth/*.js', './modules/users/*.js', './modules/roles/*.js', './modules/shifts/*.js'],
+  apis: [
+    './modules/auth/*.js',
+    './modules/users/*.js',
+    './modules/roles/*.js',
+    './modules/shifts/*.js',
+    './modules/attendance/*.js',
+  ],
 };
 
 module.exports = swaggerJsdoc(swaggerOptions);

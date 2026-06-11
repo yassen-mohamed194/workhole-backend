@@ -11,9 +11,11 @@ const PERMISSIONS = {
   SHIFTS_UPDATE: 'shifts.update',
   SHIFTS_DELETE: 'shifts.delete',
 
+  ATTENDANCE_OFFICE_MANAGE: 'attendance.office.manage',
   ATTENDANCE_CHECKIN: 'attendance.checkin',
   ATTENDANCE_CHECKOUT: 'attendance.checkout',
   ATTENDANCE_HISTORY: 'attendance.history',
+  ATTENDANCE_READ: 'attendance.read',
 
   BREAKS_START: 'breaks.start',
   BREAKS_END: 'breaks.end',

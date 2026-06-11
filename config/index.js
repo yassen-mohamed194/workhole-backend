@@ -10,6 +10,8 @@ const envSchema = z.object({
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_SECRET: z.string().min(1, 'JWT_REFRESH_SECRET is required'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
+  ATTENDANCE_GRACE_MINUTES: z.coerce.number().int().min(0).default(15),
+  OFFICE_RADIUS_METERS: z.coerce.number().int().positive().default(100),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -28,4 +30,6 @@ module.exports = {
   jwtExpiresIn: env.JWT_ACCESS_EXPIRES_IN,
   jwtRefreshSecret: env.JWT_REFRESH_SECRET,
   jwtRefreshExpiresIn: env.JWT_REFRESH_EXPIRES_IN,
+  attendanceGraceMinutes: env.ATTENDANCE_GRACE_MINUTES,
+  officeRadiusMeters: env.OFFICE_RADIUS_METERS,
 };
