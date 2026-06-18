@@ -1248,6 +1248,349 @@ const swaggerDefinition = {
           },
         },
       },
+      Company: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345684',
+          },
+          name: {
+            type: 'string',
+            example: 'Acme Corporation',
+          },
+          code: {
+            type: 'string',
+            example: 'acme-corp',
+          },
+          email: {
+            type: 'string',
+            format: 'email',
+            nullable: true,
+            example: 'contact@acme.com',
+          },
+          phone: {
+            type: 'string',
+            nullable: true,
+            example: '01234567890',
+          },
+          address: {
+            type: 'string',
+            nullable: true,
+            example: '123 Business Street, Cairo',
+          },
+          logo: {
+            type: 'string',
+            nullable: true,
+            example: 'https://cdn.example.com/acme-logo.png',
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive', 'suspended'],
+            example: 'active',
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-18T10:00:00.000Z',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-18T10:00:00.000Z',
+          },
+        },
+      },
+      CreateCompanyRequest: {
+        type: 'object',
+        required: ['name', 'code'],
+        properties: {
+          name: {
+            type: 'string',
+            minLength: 2,
+            example: 'Acme Corporation',
+          },
+          code: {
+            type: 'string',
+            description: 'Unique lowercase identifier without spaces, used later for login',
+            example: 'acme-corp',
+          },
+          email: {
+            type: 'string',
+            format: 'email',
+            example: 'contact@acme.com',
+          },
+          phone: {
+            type: 'string',
+            example: '01234567890',
+          },
+          address: {
+            type: 'string',
+            example: '123 Business Street, Cairo',
+          },
+          logo: {
+            type: 'string',
+            example: 'https://cdn.example.com/acme-logo.png',
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive', 'suspended'],
+            example: 'active',
+          },
+        },
+      },
+      UpdateCompanyRequest: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            minLength: 2,
+            example: 'Acme Corp International',
+          },
+          code: {
+            type: 'string',
+            description: 'Unique lowercase identifier without spaces',
+            example: 'acme-intl',
+          },
+          email: {
+            type: 'string',
+            format: 'email',
+            example: 'info@acme.com',
+          },
+          phone: {
+            type: 'string',
+            example: '01234567890',
+          },
+          address: {
+            type: 'string',
+            example: '456 Enterprise Avenue, Cairo',
+          },
+          logo: {
+            type: 'string',
+            example: 'https://cdn.example.com/acme-logo-v2.png',
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive', 'suspended'],
+            example: 'inactive',
+          },
+        },
+        description: 'At least one field is required',
+      },
+      SuccessResponseWithCompany: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/Company',
+          },
+        },
+      },
+      SuccessResponseWithCompanies: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/Company',
+            },
+          },
+        },
+      },
+      CompanyMemberUser: {
+        type: 'object',
+        description: 'Populated user basic data. Password and refreshToken are never exposed.',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '681a3c7ac9ab39d812345678',
+          },
+          firstName: {
+            type: 'string',
+            example: 'John',
+          },
+          lastName: {
+            type: 'string',
+            example: 'Doe',
+          },
+          email: {
+            type: 'string',
+            format: 'email',
+            example: 'john@example.com',
+          },
+          phone: {
+            type: 'string',
+            nullable: true,
+            example: '01234567890',
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive'],
+            example: 'active',
+          },
+        },
+      },
+      CompanyMemberRole: {
+        type: 'object',
+        description: 'Populated role basic data for the company membership.',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345679',
+          },
+          name: {
+            type: 'string',
+            example: 'employee',
+          },
+          permissions: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            example: ['attendance.checkin', 'attendance.checkout'],
+          },
+          isSystem: {
+            type: 'boolean',
+            example: true,
+          },
+        },
+      },
+      CompanyMember: {
+        type: 'object',
+        description: 'Company membership linking a user to a company with a per-company role.',
+        properties: {
+          _id: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345685',
+          },
+          companyId: {
+            type: 'string',
+            example: '6820ab17c9ab39d812345684',
+          },
+          userId: {
+            $ref: '#/components/schemas/CompanyMemberUser',
+          },
+          roleId: {
+            $ref: '#/components/schemas/CompanyMemberRole',
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive', 'pending'],
+            example: 'active',
+          },
+          joinedAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-18T10:00:00.000Z',
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-18T10:00:00.000Z',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2026-06-18T10:00:00.000Z',
+          },
+        },
+        example: {
+          _id: '6820ab17c9ab39d812345685',
+          companyId: '6820ab17c9ab39d812345684',
+          userId: {
+            _id: '681a3c7ac9ab39d812345678',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john@example.com',
+            phone: '01234567890',
+            status: 'active',
+          },
+          roleId: {
+            _id: '6820ab17c9ab39d812345679',
+            name: 'employee',
+            permissions: ['attendance.checkin', 'attendance.checkout'],
+            isSystem: true,
+          },
+          status: 'active',
+          joinedAt: '2026-06-18T10:00:00.000Z',
+          createdAt: '2026-06-18T10:00:00.000Z',
+          updatedAt: '2026-06-18T10:00:00.000Z',
+        },
+      },
+      AddCompanyMemberRequest: {
+        type: 'object',
+        required: ['userId', 'roleId'],
+        properties: {
+          userId: {
+            type: 'string',
+            description: 'Valid MongoDB ObjectId of an existing user',
+            example: '681a3c7ac9ab39d812345678',
+          },
+          roleId: {
+            type: 'string',
+            description: 'Valid MongoDB ObjectId of an existing role',
+            example: '6820ab17c9ab39d812345679',
+          },
+        },
+        example: {
+          userId: '681a3c7ac9ab39d812345678',
+          roleId: '6820ab17c9ab39d812345679',
+        },
+      },
+      UpdateCompanyMemberRequest: {
+        type: 'object',
+        properties: {
+          roleId: {
+            type: 'string',
+            description: 'Valid MongoDB ObjectId of an existing role',
+            example: '6820ab17c9ab39d812345679',
+          },
+          status: {
+            type: 'string',
+            enum: ['active', 'inactive', 'pending'],
+            example: 'active',
+          },
+        },
+        description: 'At least one field (roleId or status) is required',
+        example: {
+          roleId: '6820ab17c9ab39d812345679',
+          status: 'active',
+        },
+      },
+      SuccessResponseWithCompanyMember: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            $ref: '#/components/schemas/CompanyMember',
+          },
+        },
+      },
+      SuccessResponseWithCompanyMembers: {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'string',
+            example: 'success',
+          },
+          data: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/CompanyMember',
+            },
+          },
+        },
+      },
       SuccessResponseWithAttendanceSummary: {
         type: 'object',
         properties: {
@@ -1388,6 +1731,118 @@ const swaggerDefinition = {
           },
         },
       },
+      CompanyNotFound: {
+        description: 'Company not found',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ApiError',
+            },
+            examples: {
+              companyNotFound: {
+                value: {
+                  status: 'error',
+                  message: 'Company not found',
+                },
+              },
+            },
+          },
+        },
+      },
+      UserNotFound: {
+        description: 'User not found',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ApiError',
+            },
+            examples: {
+              userNotFound: {
+                value: {
+                  status: 'error',
+                  message: 'User not found',
+                },
+              },
+            },
+          },
+        },
+      },
+      RoleNotFound: {
+        description: 'Role not found',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ApiError',
+            },
+            examples: {
+              roleNotFound: {
+                value: {
+                  status: 'error',
+                  message: 'Role not found',
+                },
+              },
+            },
+          },
+        },
+      },
+      MembershipNotFound: {
+        description: 'Membership not found',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ApiError',
+            },
+            examples: {
+              membershipNotFound: {
+                value: {
+                  status: 'error',
+                  message: 'Membership not found',
+                },
+              },
+            },
+          },
+        },
+      },
+      MembershipAlreadyExists: {
+        description: 'Membership already exists',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ApiError',
+            },
+            examples: {
+              membershipAlreadyExists: {
+                value: {
+                  status: 'error',
+                  message: 'Membership already exists',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    parameters: {
+      CompanyIdPathParam: {
+        in: 'path',
+        name: 'companyId',
+        required: true,
+        schema: {
+          type: 'string',
+          example: '6820ab17c9ab39d812345684',
+        },
+        description: 'Company MongoDB ObjectId',
+      },
+      UserIdPathParam: {
+        in: 'path',
+        name: 'userId',
+        required: true,
+        schema: {
+          type: 'string',
+          example: '681a3c7ac9ab39d812345678',
+        },
+        description: 'User MongoDB ObjectId',
+      },
     },
   },
   security: [{ bearerAuth: [] }],
@@ -1420,6 +1875,15 @@ const swaggerDefinition = {
       name: 'Breaks',
       description: 'Employee break start and end actions',
     },
+    {
+      name: 'Companies',
+      description: 'Company lifecycle management for multi-tenant foundation',
+    },
+    {
+      name: 'Company Members',
+      description:
+        'Company membership management. Permissions: `companies.members.create`, `companies.members.read`, `companies.members.update`, `companies.members.delete`',
+    },
   ],
 };
 
@@ -1433,6 +1897,7 @@ const swaggerOptions = {
     './modules/attendance/*.js',
     './modules/break-types/*.js',
     './modules/breaks/*.js',
+    './modules/companies/*.js',
   ],
 };
 

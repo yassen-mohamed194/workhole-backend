@@ -27,6 +27,16 @@ const PERMISSIONS = {
   BREAK_TYPES_READ: 'break-types.read',
   BREAK_TYPES_UPDATE: 'break-types.update',
   BREAK_TYPES_DELETE: 'break-types.delete',
+
+  COMPANIES_CREATE: 'companies.create',
+  COMPANIES_READ: 'companies.read',
+  COMPANIES_UPDATE: 'companies.update',
+  COMPANIES_DELETE: 'companies.delete',
+
+  COMPANIES_MEMBERS_CREATE: 'companies.members.create',
+  COMPANIES_MEMBERS_READ: 'companies.members.read',
+  COMPANIES_MEMBERS_UPDATE: 'companies.members.update',
+  COMPANIES_MEMBERS_DELETE: 'companies.members.delete',
 };
 
 const ALL_PERMISSIONS = Object.freeze(Object.values(PERMISSIONS));

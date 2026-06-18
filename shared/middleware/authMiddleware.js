@@ -23,6 +23,7 @@ function authMiddleware(req, res, next) {
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
 
+    // LEGACY: roleId from JWT (User.roleId). Company-scoped roleId lives in req.companyContext.
     req.user = {
       id: decoded.id,
       roleId: decoded.roleId,

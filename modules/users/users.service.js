@@ -6,6 +6,7 @@ const rolesRepository = require('../roles/roles.repository');
 const shiftsRepository = require('../shifts/shifts.repository');
 const usersRepository = require('./users.repository');
 
+// LEGACY: resolves role for User.roleId. Company roles are assigned via CompanyMember.
 async function resolveRoleId(roleName) {
   const role = await rolesRepository.findRoleByName(roleName || SYSTEM_EMPLOYEE_ROLE);
   if (!role) {

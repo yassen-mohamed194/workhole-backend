@@ -1,5 +1,6 @@
 const ApiError = require('../../shared/utils/ApiError');
 const { SYSTEM_ADMIN_ROLE } = require('../../shared/constants/permissions');
+const companyMemberRepository = require('../companies/companyMember.repository');
 const usersRepository = require('../users/users.repository');
 const rolesRepository = require('./roles.repository');
 
@@ -92,7 +93,9 @@ async function deleteRoleById(id) {
   }
 
   const assignedUsersCount = await usersRepository.countByRoleId(id);
-  if (assignedUsersCount > 0) {
+  const assignedMembersCount = await companyMemberRepository.countByRoleId(id);
+
+  if (assignedUsersCount > 0 || assignedMembersCount > 0) {
     throw new ApiError(409, 'Role is assigned to users');
   }
 

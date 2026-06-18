@@ -1,3 +1,4 @@
+// LEGACY: maps User.roleId to API role name. Company-scoped roles live on CompanyMember.
 function getRoleName(user) {
   if (user.roleId && typeof user.roleId === 'object' && user.roleId.name) {
     return user.roleId.name;

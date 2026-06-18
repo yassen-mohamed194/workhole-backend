@@ -1,25 +1,31 @@
 const ApiError = require('../utils/ApiError');
-const { WILDCARD_PERMISSION } = require('../constants/permissions');
+const membershipService = require('../services/membership.service');
+const { hasPermission, resolveEffectivePermissions } = require('../utils/permissionUtils');
 
-function hasPermission(userPermissions, requiredPermission) {
-  if (!Array.isArray(userPermissions)) {
-    return false;
-  }
-
-  if (userPermissions.includes(WILDCARD_PERMISSION)) {
-    return true;
-  }
-
-  return userPermissions.includes(requiredPermission);
-}
-
+/**
+ * Permission gate middleware.
+ *
+ * Phase 2.2.1 preparation:
+ * - Authorization still uses JWT permissions (legacy User.roleId).
+ * - When req.params.companyId is present, req.companyContext is populated from
+ *   CompanyMember.roleId for future company-scoped RBAC (not yet used for checks).
+ */
 function authorizePermissions(...requiredPermissions) {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (!req.user) {
       return next(new ApiError(401, 'Unauthorized'));
     }
 
-    const userPermissions = req.user.permissions || [];
+    const companyId = req.params?.companyId;
+    if (companyId && req.user.id) {
+      try {
+        req.companyContext = await membershipService.buildCompanyContext(companyId, req.user.id);
+      } catch {
+        req.companyContext = null;
+      }
+    }
+
+    const userPermissions = resolveEffectivePermissions(req);
     const allowed = requiredPermissions.every((permission) =>
       hasPermission(userPermissions, permission)
     );
@@ -33,3 +39,5 @@ function authorizePermissions(...requiredPermissions) {
 }
 
 module.exports = authorizePermissions;
+module.exports.hasPermission = hasPermission;
+module.exports.resolveEffectivePermissions = resolveEffectivePermissions;

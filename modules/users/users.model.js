@@ -33,6 +33,8 @@ const usersSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+    // LEGACY: global role reference. Source of truth is moving to CompanyMember.roleId.
+    // Kept temporarily for JWT/auth backward compatibility until login/JWT migration (Phase 2.3+).
     roleId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Role',

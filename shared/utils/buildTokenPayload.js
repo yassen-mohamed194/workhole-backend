@@ -1,3 +1,4 @@
+// LEGACY: builds JWT from User.roleId. Will switch to CompanyMember.roleId in a future auth phase.
 function buildTokenPayload(user) {
   const role = user.roleId;
 

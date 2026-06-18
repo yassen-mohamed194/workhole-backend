@@ -1,5 +1,6 @@
 const Role = require('../../modules/roles/roles.model');
 const User = require('../../modules/users/users.model');
+const CompanyMember = require('../../modules/companies/companyMember.model');
 const {
   PERMISSIONS,
   WILDCARD_PERMISSION,
@@ -65,9 +66,34 @@ async function migrateLegacyUserRoles() {
   }
 }
 
+/**
+ * Copies legacy User.roleId into CompanyMember.roleId when membership role is missing.
+ * Ensures existing permissions are preserved on the company-scoped model.
+ */
+async function migrateMembershipRolesFromUsers() {
+  const membersMissingRole = await CompanyMember.collection
+    .find({
+      $or: [{ roleId: { $exists: false } }, { roleId: null }],
+    })
+    .toArray();
+
+  for (const member of membersMissingRole) {
+    const user = await User.findById(member.userId).select('roleId').lean();
+    if (!user?.roleId) {
+      continue;
+    }
+
+    await CompanyMember.collection.updateOne(
+      { _id: member._id },
+      { $set: { roleId: user.roleId } }
+    );
+  }
+}
+
 async function seedRoles() {
   await ensureSystemRoles();
   await migrateLegacyUserRoles();
+  await migrateMembershipRolesFromUsers();
 }
 
 module.exports = seedRoles;
