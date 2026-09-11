@@ -3,6 +3,10 @@ const { z } = require('zod');
 const loginSchema = z.object({
   identifier: z.string().min(1, 'identifier is required'),
   password: z.string().min(1, 'password is required'),
+  companyCode: z.preprocess(
+    (value) => (value === undefined || value === null ? '' : value),
+    z.string().min(1, 'Missing companyCode')
+  ),
 });
 
 const changePasswordSchema = z.object({

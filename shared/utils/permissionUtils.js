@@ -12,12 +12,6 @@ function hasPermission(userPermissions, requiredPermission) {
   return userPermissions.includes(requiredPermission);
 }
 
-/**
- * Resolves permissions used for route authorization.
- *
- * Phase 2.2.1: JWT permissions (from legacy User.roleId) remain authoritative.
- * Future company-scoped RBAC will prefer req.companyContext.permissions when enabled.
- */
 function resolveEffectivePermissions(req) {
   return req.user?.permissions || [];
 }

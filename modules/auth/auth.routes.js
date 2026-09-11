@@ -11,8 +11,8 @@ const router = Router();
  * /api/auth/login:
  *   post:
  *     tags: [Auth]
- *     summary: Login with email/identifier and password
- *     description: Authenticates a user and returns access and refresh tokens.
+ *     summary: Login to a company
+ *     description: Authenticates a user for the requested company and returns company-scoped access and refresh tokens.
  *     security: []
  *     requestBody:
  *       required: true
@@ -25,6 +25,7 @@ const router = Router();
  *               value:
  *                 identifier: admin@gmail.com
  *                 password: admin123
+ *                 companyCode: workhole
  *     responses:
  *       200:
  *         description: Login successful
@@ -42,6 +43,10 @@ const router = Router();
  *         $ref: '#/components/responses/BadRequest'
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
  */
 router.post('/login', validate(loginSchema), authController.login);
 /**

@@ -1,17 +1,22 @@
-// LEGACY: builds JWT from User.roleId. Will switch to CompanyMember.roleId in a future auth phase.
-function buildTokenPayload(user) {
-  const role = user.roleId;
+function normalizeId(value) {
+  const id = value?._id ?? value;
+  return id ? String(id) : null;
+}
+
+function buildTokenPayload(user, company, membership) {
+  const role = membership?.roleId;
 
   if (!role) {
-    throw new Error('User role must be populated before building token payload');
+    throw new Error('CompanyMember.roleId must be populated before building token payload');
   }
 
-  const roleId = role._id ?? role;
   const permissions = role.permissions ?? [];
 
   return {
-    id: user._id,
-    roleId,
+    id: normalizeId(user),
+    companyId: normalizeId(company),
+    membershipId: normalizeId(membership),
+    roleId: normalizeId(role),
     permissions,
   };
 }

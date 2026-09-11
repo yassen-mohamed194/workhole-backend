@@ -90,7 +90,7 @@ const swaggerDefinition = {
       },
       LoginRequest: {
         type: 'object',
-        required: ['identifier', 'password'],
+        required: ['identifier', 'password', 'companyCode'],
         properties: {
           identifier: {
             type: 'string',
@@ -100,10 +100,51 @@ const swaggerDefinition = {
             type: 'string',
             example: 'admin123',
           },
+          companyCode: {
+            type: 'string',
+            description: 'Required company code used to scope authentication',
+            example: 'workhole',
+          },
+        },
+      },
+      JwtPayload: {
+        type: 'object',
+        description: 'Company-scoped JWT payload generated from CompanyMember.roleId',
+        required: ['id', 'companyId', 'membershipId', 'roleId', 'permissions'],
+        properties: {
+          id: {
+            type: 'string',
+            description: 'Authenticated user id',
+            example: '681a3c7ac9ab39d812345678',
+          },
+          companyId: {
+            type: 'string',
+            description: 'Authenticated company id',
+            example: '6820ab17c9ab39d812345670',
+          },
+          membershipId: {
+            type: 'string',
+            description: 'CompanyMember id for this login session',
+            example: '6820ab17c9ab39d812345671',
+          },
+          roleId: {
+            type: 'string',
+            description: 'Role id from CompanyMember.roleId',
+            example: '6820ab17c9ab39d812345679',
+          },
+          permissions: {
+            type: 'array',
+            description: 'Permissions loaded from the company member role',
+            items: {
+              type: 'string',
+            },
+            example: ['attendance.checkin', 'attendance.checkout'],
+          },
         },
       },
       LoginResponseData: {
         type: 'object',
+        description: 'Tokens contain the JwtPayload fields: id, companyId, membershipId, roleId, and permissions.',
         properties: {
           accessToken: {
             type: 'string',
@@ -130,6 +171,7 @@ const swaggerDefinition = {
       },
       RefreshTokenResponseData: {
         type: 'object',
+        description: 'The refreshed access token preserves companyId, membershipId, roleId, and permissions from the refresh token payload.',
         properties: {
           accessToken: {
             type: 'string',

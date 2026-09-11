@@ -17,11 +17,9 @@ function findByEmailWithPassword(email) {
 function findByIdentifier(identifier) {
   const value = String(identifier).trim();
   if (value.includes('@')) {
-    return User.findOne({ email: value.toLowerCase() })
-      .select('+password')
-      .populate(POPULATE_ROLE);
+    return User.findOne({ email: value.toLowerCase() }).select('+password');
   }
-  return User.findOne({ phone: value }).select('+password').populate(POPULATE_ROLE);
+  return User.findOne({ phone: value }).select('+password');
 }
 
 function findAll() {
@@ -41,7 +39,7 @@ function findByIdWithPassword(id) {
 }
 
 function findByIdWithRefreshToken(id) {
-  return User.findById(id).populate(POPULATE_ROLE);
+  return User.findById(id);
 }
 
 function updateById(id, data) {

@@ -22,13 +22,20 @@ function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
+    const permissions = Array.isArray(decoded.permissions) ? decoded.permissions : [];
 
-    // LEGACY: roleId from JWT (User.roleId). Company-scoped roleId lives in req.companyContext.
+    if (!decoded.id || !decoded.companyId || !decoded.membershipId || !decoded.roleId) {
+      return next(new ApiError(401, 'Invalid or expired token'));
+    }
+
     req.user = {
       id: decoded.id,
+      companyId: decoded.companyId,
+      membershipId: decoded.membershipId,
       roleId: decoded.roleId,
-      permissions: Array.isArray(decoded.permissions) ? decoded.permissions : [],
+      permissions,
     };
+    req.companyId = decoded.companyId;
 
     return next();
   } catch {

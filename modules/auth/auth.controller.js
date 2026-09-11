@@ -2,8 +2,8 @@ const authService = require('./auth.service');
 
 async function login(req, res, next) {
   try {
-    const { identifier, password } = req.body;
-    const data = await authService.login(identifier, password);
+    const { identifier, password, companyCode } = req.body;
+    const data = await authService.login(identifier, password, companyCode);
     return res.status(200).json({
       status: 'success',
       data,

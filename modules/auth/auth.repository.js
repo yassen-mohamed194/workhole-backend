@@ -1,7 +1,17 @@
 const usersRepository = require('../users/users.repository');
+const companyRepository = require('../companies/company.repository');
+const companyMemberRepository = require('../companies/companyMember.repository');
 
 function findUserByIdentifier(identifier) {
   return usersRepository.findByIdentifier(identifier);
+}
+
+function findCompanyByCode(code) {
+  return companyRepository.findCompanyByCode(code);
+}
+
+function findCompanyMember(companyId, userId) {
+  return companyMemberRepository.findCompanyMember(companyId, userId);
 }
 
 function updateRefreshTokenById(userId, refreshToken) {
@@ -18,6 +28,8 @@ function clearRefreshTokenById(userId) {
 
 module.exports = {
   findUserByIdentifier,
+  findCompanyByCode,
+  findCompanyMember,
   updateRefreshTokenById,
   findUserByIdWithRefreshToken,
   clearRefreshTokenById,
